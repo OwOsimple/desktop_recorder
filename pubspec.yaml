@@ -15,10 +15,10 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   # third party
-  #  ffmpeg_kit_flutter: ^5.1.0
+  ffmpeg_kit_flutter: ^5.1.0
   file_picker: ^5.2.5
   get: ^4.6.5
-  path_provider: ^2.0.13
+#  path_provider: ^2.0.13
   process_run: ^0.12.5+2
   window_manager: ^0.3.1
 

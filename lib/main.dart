@@ -1,10 +1,12 @@
 import 'dart:io';
 
-import 'package:desktop_recorder/recording_behavior/windows_recording_behavior.dart';
 import 'package:desktop_recorder/record_button.dart';
 import 'package:desktop_recorder/record_controller.dart';
+import 'package:desktop_recorder/recording_behavior/mac_recording_behavior.dart';
+import 'package:desktop_recorder/recording_behavior/windows_recording_behavior.dart';
 import 'package:desktop_recorder/recording_time_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:window_size/window_size.dart';
@@ -20,6 +22,8 @@ void main() {
 
   if (Platform.isWindows) {
     Get.put(RecordController(behavior: WindowsRecordingBehavior()));
+  } else if (Platform.isMacOS) {
+    Get.put(RecordController(behavior: MacRecordingBehavior()));
   }
 
   RecordController.recordingRegistry.listen((isRecording) {
@@ -60,20 +64,54 @@ class MyApp extends StatelessWidget with WindowListener {
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
+  Widget _column() {
+    if (Platform.isWindows) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(12.0),
+            child: RecordButton(),
+          ),
+          RecordingTimeWidget(),
+        ],
+      );
+    }
+
+    /// Platform.isMacOS
+    return FutureBuilder(
+        future: const MethodChannel('com.example/desktop_recorder').invokeMethod('canRecordScreen'),
+        builder: (_, result) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: (result.hasData && result.data == true) ? const RecordButton() : const RecordButton(enabled: false),
+              ),
+              RecordingTimeWidget(),
+              (result.hasData && result.data == true)
+                  ? const SizedBox.shrink()
+                  : Container(
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(Radius.circular(5)),
+                        color: Colors.redAccent.withAlpha(200),
+                      ),
+                      clipBehavior: Clip.hardEdge,
+                      margin: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8.0),
+                      child: const Text('Screen Recording Not Allowed'),
+                    ),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: RecordButton(recordBehavior: WindowsRecordingBehavior()),
-            ),
-            RecordingTimeWidget(),
-          ],
-        ),
+        child: _column(),
       ),
     );
   }

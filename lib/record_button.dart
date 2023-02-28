@@ -1,14 +1,13 @@
-import 'package:desktop_recorder/recording_behavior/recording_behavior.dart';
 import 'package:desktop_recorder/record_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RecordButton extends StatelessWidget {
-  final RecordingBehavior recordBehavior;
+  final bool enabled;
 
   const RecordButton({
     super.key,
-    required this.recordBehavior,
+    this.enabled = true,
   });
 
   void _onPressed() async {
@@ -26,8 +25,8 @@ class RecordButton extends StatelessWidget {
       return Icon(iconData, color: Colors.black45);
     });
 
-    final Widget iconButton = IconButton(
-      onPressed: _onPressed,
+    Widget iconButton = IconButton(
+      onPressed: enabled ? _onPressed : null,
       icon: icon,
     );
 
@@ -35,7 +34,7 @@ class RecordButton extends StatelessWidget {
       width: 72,
       height: 72,
       child: Material(
-        color: Colors.redAccent,
+        color: enabled ? Colors.redAccent : Colors.grey,
         shape: const CircleBorder(),
         child: iconButton,
       ),
