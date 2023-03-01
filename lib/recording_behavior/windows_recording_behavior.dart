@@ -6,6 +6,14 @@ import 'package:process_run/shell.dart';
 
 class WindowsRecordingBehavior extends RecordingBehavior {
   Process? _process;
+  late String _ffmpegPath;
+
+  WindowsRecordingBehavior() {
+    List<String> pathList = Platform.resolvedExecutable.split('\\')
+      ..removeLast()
+      ..addAll(['data', 'flutter_assets', 'assets']);
+    _ffmpegPath = pathList.join('\\');
+  }
 
   @override
   Future<void> startRecording(RecordingArg args) async {
@@ -13,7 +21,7 @@ class WindowsRecordingBehavior extends RecordingBehavior {
     final String resolutionSetting =
         '-vf "scale=$resolution:force_original_aspect_ratio=decrease,pad=$resolution:-1:-1:color=black"';
     Shell().run(
-      'assets/ffmpeg.exe -f gdigrab -framerate ${args.frameRate} -i desktop $resolutionSetting "${args.fileName}.${args.fileExtension}"',
+      '$_ffmpegPath\\ffmpeg.exe -f gdigrab -framerate ${args.frameRate} -i desktop $resolutionSetting "${args.fileName}.${args.fileExtension}"',
       onProcess: (process) => _process = process,
     );
   }
