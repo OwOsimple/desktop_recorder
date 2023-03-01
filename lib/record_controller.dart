@@ -1,5 +1,6 @@
 import 'package:desktop_recorder/recording_behavior/recording_arg.dart';
 import 'package:desktop_recorder/recording_behavior/recording_behavior.dart';
+import 'package:desktop_recorder/video_setting/video_setting_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -24,10 +25,10 @@ class RecordController extends GetxController {
     final String fileName = DateFormat('yyyy-MM-dd HH.mm.ss').format(DateTime.now());
     await RecordController.of.behavior.startRecording(
       RecordingArg(
-        resolution: Size(360, 240),
-        fileName: fileName,
-        fileExtension: 'mp4',
-        frameRate: 30,
+        resolution: VideoSettingController.of.size,
+        fileName: '${VideoSettingController.of.directory}/$fileName',
+        fileExtension: VideoSettingController.of.format,
+        frameRate: VideoSettingController.of.frameRate,
       ),
     );
     RecordController.of._isRecording.value = true;

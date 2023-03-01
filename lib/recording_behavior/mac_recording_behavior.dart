@@ -27,7 +27,7 @@ class MacRecordingBehavior extends RecordingBehavior {
     final String resolutionSetting = '-vf "scale=$resolution:force_original_aspect_ratio=decrease,pad=$resolution:-1:-1:color=black"';
 
     FFmpegKit.executeAsync(
-      '-f avfoundation -framerate ${args.frameRate} -vsync 2 -i "$_screenIndex" $resolutionSetting "./${args.fileName}.${args.fileExtension}"',
+      '-f avfoundation -framerate ${args.frameRate} -vsync 2 -i "$_screenIndex" $resolutionSetting "${args.fileName}.${args.fileExtension}"',
     );
   }
 

@@ -5,27 +5,42 @@ import 'package:desktop_recorder/record_controller.dart';
 import 'package:desktop_recorder/recording_behavior/mac_recording_behavior.dart';
 import 'package:desktop_recorder/recording_behavior/windows_recording_behavior.dart';
 import 'package:desktop_recorder/recording_time_widget.dart';
+import 'package:desktop_recorder/video_setting/video_setting_controller.dart';
+import 'package:desktop_recorder/video_setting/video_setting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:window_size/window_size.dart';
 
-void main() {
+Future<void> setDesktopPath() async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+
+    List<String> pathList = directory.path.split('\\');
+    pathList[pathList.length - 1] = 'Desktop';
+    final String desktopPath = pathList.join('\\');
+
+    Get.put(desktopPath, tag: 'desktopPath');
+}
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  const String idleWindowTitle = 'Screen Recorder';
-  const String recordingWindowTitle = 'Screen Recorder ... Recording';
-
-  setWindowTitle(idleWindowTitle);
-  setWindowMinSize(const Size(360, 480));
+  if (Platform.isWindows) {
+    await setDesktopPath();
+  }
 
   if (Platform.isWindows) {
     Get.put(RecordController(behavior: WindowsRecordingBehavior()));
   } else if (Platform.isMacOS) {
     Get.put(RecordController(behavior: MacRecordingBehavior()));
   }
+  Get.put(VideoSettingController());
 
+  const String idleWindowTitle = 'Screen Recorder';
+  const String recordingWindowTitle = 'Screen Recorder ... Recording';
+  setWindowTitle(idleWindowTitle);
   RecordController.recordingRegistry.listen((isRecording) {
     if (isRecording) {
       setWindowTitle(recordingWindowTitle);
@@ -33,6 +48,7 @@ void main() {
       setWindowTitle(idleWindowTitle);
     }
   });
+  setWindowMinSize(const Size(360, 480));
 
   runApp(MyApp());
 }
@@ -111,7 +127,15 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: _column(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            VideoSettingWidget(),
+            const Spacer(),
+            _column(),
+            const Spacer(),
+          ],
+        ),
       ),
     );
   }

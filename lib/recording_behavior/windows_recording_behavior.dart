@@ -13,7 +13,7 @@ class WindowsRecordingBehavior extends RecordingBehavior {
     final String resolutionSetting =
         '-vf "scale=$resolution:force_original_aspect_ratio=decrease,pad=$resolution:-1:-1:color=black"';
     Shell().run(
-      'assets/ffmpeg.exe -f gdigrab -framerate ${args.frameRate} -i desktop $resolutionSetting "./${args.fileName}.${args.fileExtension}"',
+      'assets/ffmpeg.exe -f gdigrab -framerate ${args.frameRate} -i desktop $resolutionSetting "${args.fileName}.${args.fileExtension}"',
       onProcess: (process) => _process = process,
     );
   }
