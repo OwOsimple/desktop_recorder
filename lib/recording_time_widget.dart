@@ -11,7 +11,7 @@ class RecordingTimeWidget extends StatelessWidget {
     stopwatch.elapsed.listen(
       (elapsedDuration) => elapsed.value = elapsedDuration,
     );
-    RecordController.recordingRegistry.listen(
+    RecordController.of.listener.listen(
       (isRecording) => isRecording ? stopwatch.start() : stopwatch.stop(),
     );
   }

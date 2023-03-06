@@ -5,32 +5,21 @@ import 'package:flutter/material.dart';
 class VideoSettingFrameRate extends VideoSetting {
   @override
   Widget settingWidget() {
-    return DropdownButton(
-      isExpanded: true,
-      value: VideoSettingController.of.frameRate,
-      items: <DropdownMenuItem<int>>[
-        DropdownMenuItem(
-          value: 30,
-          child: Text(
-            '30',
-            style: textStyle,
+    return dropdownButton<int>(
+      rxValue: VideoSettingController.of.frameRate,
+      items: [
+        for (int frameRate in VideoSettingController.availableFrameRates)
+          DropdownMenuItem(
+            value: frameRate,
+            child: Text(
+              frameRate.toString(),
+              style: textStyle,
+            ),
           ),
-        ),
       ],
-      onChanged: (int? value) {
-        VideoSettingController.of.setSetting(frameRate: value);
-      },
-      icon: const Icon(Icons.arrow_drop_down),
-      iconSize: 24,
-      underline: const SizedBox(),
     );
   }
 
   @override
-  Widget textWidget() {
-    return Text(
-      'Frame Rate:',
-      style: textStyle,
-    );
-  }
+  String text() => 'Frame Rate:';
 }

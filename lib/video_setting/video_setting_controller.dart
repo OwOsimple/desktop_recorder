@@ -6,31 +6,23 @@ import 'package:get/get.dart';
 class VideoSettingController extends GetxController {
   static VideoSettingController get of => Get.find();
 
-  String _directory = Platform.isWindows ? Get.find(tag: 'desktopPath') : Directory.current.path;
-  String _format = 'mp4';
-  Size _size = const Size(360, 240);
-  int _frameRate = 30;
+  final RxString directory = '${Platform.isWindows ? Get.find(tag: 'desktopPath') : Directory.current.path}'.obs;
+  final RxString format = availableFormats.first.obs;
+  final Rx<Size> size = availableResolutions.first.obs;
+  final RxInt frameRate = availableFrameRates.first.obs;
 
-  String get directory => _directory;
+  /// Modify video format(s) in the list
+  static final List<String> availableFormats = [
+    'mp4',
+  ];
 
-  String get format => _format;
+  /// Modify resolution(s) in the list
+  static final List<Size> availableResolutions = [
+    const Size(360, 240),
+  ];
 
-  Size get size => _size;
-
-  int get frameRate => _frameRate;
-
-  void setSetting({String? directory, String? format, Size? size, int? frameRate}) {
-    if (directory != null) {
-      _directory = directory;
-    }
-    if (format != null) {
-      _format = format;
-    }
-    if (size != null) {
-      _size = size;
-    }
-    if (frameRate != null) {
-      _frameRate = frameRate;
-    }
-  }
+  /// Modify framerate(s) in the list
+  static final List<int> availableFrameRates = [
+    30,
+  ];
 }

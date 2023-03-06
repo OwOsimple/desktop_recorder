@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class VideoSettingDirectory extends VideoSetting {
-  TextEditingController controller = TextEditingController(text: VideoSettingController.of.directory);
+  final TextEditingController controller = TextEditingController(text: VideoSettingController.of.directory.value);
 
   @override
   Widget settingWidget() {
@@ -28,7 +28,7 @@ class VideoSettingDirectory extends VideoSetting {
             onPressed: () async {
               final String? directory = await FilePicker.platform.getDirectoryPath(initialDirectory: controller.text);
               if (directory != null) {
-                VideoSettingController.of.setSetting(directory: directory);
+                VideoSettingController.of.directory.value = directory;
                 controller.text = directory;
               }
             },
@@ -39,10 +39,5 @@ class VideoSettingDirectory extends VideoSetting {
   }
 
   @override
-  Widget textWidget() {
-    return Text(
-      'Directory:',
-      style: textStyle,
-    );
-  }
+  String text() => 'Directory:';
 }

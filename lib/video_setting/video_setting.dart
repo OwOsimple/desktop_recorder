@@ -6,10 +6,14 @@ abstract class VideoSetting {
   final RxBool enabled = true.obs;
 
   VideoSetting() {
-    RecordController.recordingRegistry.listen((isRecording) {
+    RecordController.of.listener.listen((isRecording) {
       enabled.value = !isRecording;
     });
   }
+
+  Widget settingWidget();
+
+  String text();
 
   Widget widget() {
     return Container(
@@ -25,7 +29,7 @@ abstract class VideoSetting {
             children: [
               SizedBox(
                 width: 95,
-                child: textWidget(),
+                child: Text(text(), style: textStyle),
               ),
               Container(
                 width: 225,
@@ -44,9 +48,24 @@ abstract class VideoSetting {
     );
   }
 
+  Widget dropdownButton<T>({
+    required Rx<T> rxValue,
+    required List<DropdownMenuItem<T>> items,
+  }) {
+    return Obx(
+      () => DropdownButton<T>(
+        isExpanded: true,
+        value: rxValue.value,
+        items: items,
+        onChanged: (T? t) {
+          rxValue.value = t as T;
+        },
+        icon: const Icon(Icons.arrow_drop_down),
+        iconSize: 24,
+        underline: const SizedBox(),
+      ),
+    );
+  }
+
   TextStyle get textStyle => const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold);
-
-  Widget settingWidget();
-
-  Widget textWidget();
 }

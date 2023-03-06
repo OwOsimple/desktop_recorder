@@ -41,7 +41,7 @@ void main() async {
   const String idleWindowTitle = 'Screen Recorder';
   const String recordingWindowTitle = 'Screen Recorder ... Recording';
   setWindowTitle(idleWindowTitle);
-  RecordController.recordingRegistry.listen((isRecording) {
+  RecordController.of.listener.listen((isRecording) {
     if (isRecording) {
       setWindowTitle(recordingWindowTitle);
     } else {
@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget with WindowListener {
   @override
   void onWindowClose() async {
     if (RecordController.isRecording) {
-      await RecordController.recordingStopped();
+      await RecordController.of.recordingStopped();
     }
     super.onWindowClose();
   }

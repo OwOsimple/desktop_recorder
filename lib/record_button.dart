@@ -12,9 +12,9 @@ class RecordButton extends StatelessWidget {
 
   void _onPressed() async {
     if (RecordController.isRecording) {
-      await RecordController.recordingStopped();
+      await RecordController.of.recordingStopped();
     } else {
-      await RecordController.recordingStarted();
+      await RecordController.of.recordingStarted();
     }
   }
 

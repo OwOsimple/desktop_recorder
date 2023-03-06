@@ -1,33 +1,25 @@
 import 'package:desktop_recorder/video_setting/video_setting.dart';
+import 'package:desktop_recorder/video_setting/video_setting_controller.dart';
 import 'package:flutter/material.dart';
 
 class VideoSettingFormat extends VideoSetting {
   @override
   Widget settingWidget() {
-    return DropdownButton(
-      isExpanded: true,
-      value: 'mp4',
-      items: <DropdownMenuItem<String>>[
-        DropdownMenuItem(
-          value: 'mp4',
-          child: Text(
-            'MP4',
-            style: textStyle,
+    return dropdownButton<String>(
+      rxValue: VideoSettingController.of.format,
+      items: [
+        for (String format in VideoSettingController.availableFormats)
+          DropdownMenuItem(
+            value: format.toLowerCase(),
+            child: Text(
+              format.toUpperCase(),
+              style: textStyle,
+            ),
           ),
-        ),
       ],
-      onChanged: (String? value) {},
-      icon: const Icon(Icons.arrow_drop_down),
-      iconSize: 24,
-      underline: const SizedBox(),
     );
   }
 
   @override
-  Widget textWidget() {
-    return Text(
-      'Format:',
-      style: textStyle,
-    );
-  }
+  String text() => 'Format:';
 }
