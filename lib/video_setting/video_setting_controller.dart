@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 class VideoSettingController extends GetxController {
   static VideoSettingController get of => Get.find();
 
-  final RxString directory = '${Platform.isWindows ? Get.find(tag: 'desktopPath') : Directory.current.path}'.obs;
+  final RxString directory = (Platform.isWindows ? Get.find<String>(tag: 'desktopPath') : Directory.current.path).obs;
   final RxString format = availableFormats.first.obs;
   final Rx<Size> size = availableResolutions.first.obs;
   final RxInt frameRate = availableFrameRates.first.obs;
