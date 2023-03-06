@@ -1,5 +1,6 @@
 import 'package:desktop_recorder/record_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:get/get.dart';
 
 class RecordButton extends StatelessWidget {

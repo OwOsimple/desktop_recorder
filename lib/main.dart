@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cool_alert/cool_alert.dart';
 import 'package:desktop_recorder/record_button.dart';
 import 'package:desktop_recorder/record_controller.dart';
 import 'package:desktop_recorder/recording_behavior/mac_recording_behavior.dart';
@@ -9,19 +10,19 @@ import 'package:desktop_recorder/video_setting/video_setting_controller.dart';
 import 'package:desktop_recorder/video_setting/video_setting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:window_manager/window_manager.dart';
 import 'package:window_size/window_size.dart';
 
 Future<void> setDesktopPath() async {
-    final Directory directory = await getApplicationDocumentsDirectory();
+  final Directory directory = await getApplicationDocumentsDirectory();
 
-    List<String> pathList = directory.path.split('\\');
-    pathList[pathList.length - 1] = 'Desktop';
-    final String desktopPath = pathList.join('\\');
+  List<String> pathList = directory.path.split('\\');
+  pathList[pathList.length - 1] = 'Desktop';
+  final String desktopPath = pathList.join('\\');
 
-    Get.put(desktopPath, tag: 'desktopPath');
+  Get.put(desktopPath, tag: 'desktopPath');
 }
 
 void main() async {
@@ -50,25 +51,27 @@ void main() async {
   });
   setWindowMinSize(const Size(360, 480));
 
-  runApp(MyApp());
+  FlutterWindowClose.setWindowShouldCloseHandler(() async {
+    if (!RecordController.isRecording) {
+      return true;
+    }
+    await CoolAlert.show(
+      context: Get.context!,
+      type: CoolAlertType.warning,
+      text: "Still recording!\nPlease stop the recording before closing the app.",
+    );
+    return false;
+  });
+
+  runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget with WindowListener {
-  MyApp({super.key}) {
-    WindowManager.instance.addListener(this);
-  }
-
-  @override
-  void onWindowClose() async {
-    if (RecordController.isRecording) {
-      await RecordController.of.recordingStopped();
-    }
-    super.onWindowClose();
-  }
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

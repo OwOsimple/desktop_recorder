@@ -3,8 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  screen_retriever
-  window_manager
+  flutter_window_close
   window_size
 )
 

@@ -15,12 +15,18 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   # third party
+  cool_alert: ^2.0.1
   ffmpeg_kit_flutter: ^5.1.0
   file_picker: ^5.2.5
+
+  flutter_window_close:
+    git:
+      url: https://github.com/zonble/flutter_window_close
+
   get: ^4.6.5
   path_provider: ^2.0.13
   process_run: ^0.12.5+2
-  window_manager: ^0.3.1
+
   window_size:
     git:
       url: https://github.com/google/flutter-desktop-embedding
